@@ -13,4 +13,29 @@ export class Node {
   Marks: Mark[];
   // The content of the node if it's a text node
   text: String | undefined;
+
+  // Size of the node : <p>One</p> would equal 5
+  nodeSize: number;
+
+  private constructor(init: {
+    Type: NodeType;
+    Content: Fragment;
+    attrs: {};
+    Marks: Mark[];
+    text?: string;
+  }) {
+    Object.assign(this, init);
+  }
+
+  static createText(text: string, marks: Mark[] = []): Node {
+    const nodeType = new NodeType("isText");
+
+    return new Node({
+      Type: nodeType,
+      Content: new Fragment([]),
+      attrs: {},
+      Marks: marks,
+      text,
+    });
+  }
 }

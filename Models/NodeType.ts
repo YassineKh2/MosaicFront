@@ -5,4 +5,8 @@ export class NodeType {
   isText: boolean;
   // True if this node type has inline content.
   inlineContent: boolean;
+
+  constructor(props) {
+    if (props === "isText") this.isText = true;
+  }
 }

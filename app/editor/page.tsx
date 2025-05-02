@@ -1,34 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { title } from "@/components/primitives";
+import { Editor } from "@/Models/Editor";
+import { Node } from "@/Models/Node";
+import { Selection } from "@/Models/Selection";
 
 export default function EditorPage() {
-  const Editor = useRef<HTMLDivElement | null>(null);
+  let node = Node.createText("hi");
+  let selection = new Selection();
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.ctrlKey || event.altKey) return;
+  const editor = new Editor({ Doc: node, Selection: selection });
 
-    if (event.code === "Space") return;
-
-    const key = event.key;
-
-    Editor.current?.append(key);
-  };
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  useHotkeys("*", (event) => console.log(event.key), []);
 
   return (
     <div className="flex flex-col">
       <h1 className={title()}>Editor</h1>
-      <div ref={Editor} className="border-2 h-dvh hover:cursor-text" />
+      <div className="border-2 h-dvh hover:cursor-text" />
     </div>
   );
 }

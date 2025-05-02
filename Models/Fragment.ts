@@ -8,6 +8,6 @@ export class Fragment {
 
   constructor(content: Node[]) {
     this.content = content;
-    this.size = content.reduce((n, child) => n + child.nodeSize, 0);
+    this.size = content.reduce((n, child) => n + child.nodeSize(), 0);
   }
 }

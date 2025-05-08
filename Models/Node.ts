@@ -1,6 +1,7 @@
 import { NodeType } from "@/Models/NodeType";
 import { Fragment } from "@/Models/Fragment";
 import { Mark } from "@/Models/Mark";
+import { Mapping } from "@/Models/Mapping";
 
 export class Node {
   // Type of the node ex block or linear
@@ -20,10 +21,27 @@ export class Node {
     attrs: {};
     Marks: Mark[];
     text?: string;
+    Mapping?: Mapping;
   }) {
     Object.assign(this as Object, init);
   }
 
+  // Create the starting point for the document
+  static createDoc(): Node {
+    const nodeType = new NodeType("isDoc");
+
+    const fragment = new Fragment([Node.createText("")]);
+
+    return new Node({
+      Type: nodeType,
+      Content: fragment,
+      attrs: {},
+      Marks: [],
+      text: "",
+    });
+  }
+
+  // Create a basic text node
   static createText(text: string, marks: Mark[] = []): Node {
     const nodeType = new NodeType("isText");
 
@@ -36,6 +54,7 @@ export class Node {
     });
   }
 
+  // Create a node
   static createElement(
     type: NodeType,
     attrs: {},

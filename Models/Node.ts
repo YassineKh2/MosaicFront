@@ -41,6 +41,18 @@ export class Node {
     });
   }
 
+  static createDocWithFragment(fragment: Fragment): Node {
+    const nodeType = new NodeType("isDoc");
+
+    return new Node({
+      Type: nodeType,
+      Content: fragment,
+      attrs: {},
+      Marks: [],
+      text: "",
+    });
+  }
+
   // Create a basic text node
   static createText(text: string, marks: Mark[] = []): Node {
     const nodeType = new NodeType("isText");

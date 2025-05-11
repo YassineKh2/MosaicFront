@@ -6,6 +6,10 @@ export class Mapping {
   }
 
   map(pos: number): number {
-    return this.maps.reduce((currentPos, mapFn) => mapFn(currentPos), pos);
+    let num = this.maps.reduce((currentPos, mapFn) => mapFn(currentPos), pos);
+
+    if (Math.sign(num) === -1) return 0;
+
+    return num;
   }
 }

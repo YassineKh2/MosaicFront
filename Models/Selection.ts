@@ -15,9 +15,6 @@ export class Selection {
   mapThrough(maps: Mapping) {
     this.anchor = maps.map(this.anchor);
     this.head = maps.map(this.head);
-    const f = maps.maps[0] as (pos: number) => number;
-
-    console.log(f(this.head));
 
     return this;
   }

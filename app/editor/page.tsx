@@ -7,60 +7,38 @@ import { title } from "@/components/primitives";
 import { Editor } from "@/Models/Editor";
 import { Node } from "@/Models/Node";
 import { Selection } from "@/Models/Selection";
-import { Transaction } from "@/Models/Transaction";
+import { alphabet } from "@/helpers/dict";
 
 export default function EditorPage() {
   let node = Node.createDoc();
   let selection = new Selection();
 
-  const editor = useRef<HTMLDivElement>(null as HTMLDivElement);
+  const editorVue = useRef<HTMLDivElement>(null as HTMLDivElement);
 
-  new Editor({ Doc: node, Selection: selection });
-  const alphabet = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-  ];
+  const editor = new Editor({ Doc: node, Selection: selection });
 
-  useHotkeys(alphabet, (event) => addtext(event.key), []);
-  useHotkeys("backspace", (event) => {}, []);
+  useHotkeys(alphabet, (event) => addText(event.key), []);
+  useHotkeys("backspace", () => deleteText(), []);
 
-  function addtext(text: String) {
-    let trans = new Transaction();
+  function addText(ch: string) {
+    editor.insertText(ch);
+    const updatedDoc = editor.Doc;
 
-    trans.insertText(selection.head, text);
-    node = trans.apply(node);
-    selection.mapThrough(trans.maps);
-    editor.current.textContent = node.text as string;
+    editorVue.current.textContent = editor.Doc.Content.content[0]
+      .text as string;
+    console.log(updatedDoc);
+  }
+
+  function deleteText() {
+    editor.deleteText();
+    editorVue.current.textContent = editor.Doc.Content.content[0]
+      .text as string;
   }
 
   return (
     <div className="flex flex-col">
       <h1 className={title()}>Editor</h1>
-      <div ref={editor} className="border-2 h-dvh hover:cursor-text" />
+      <div ref={editorVue} className="border-2 h-dvh hover:cursor-text" />
     </div>
   );
 }

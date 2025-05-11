@@ -64,7 +64,13 @@ export class DeleteStep extends Step {
 
   getMap() {
     const { from, to } = this;
-    const delLen = to - from;
+    let delLen;
+
+    if (from == to) {
+      delLen = 1;
+    } else {
+      delLen = to - from;
+    }
 
     return (p: number) => {
       if (p <= from) return p;

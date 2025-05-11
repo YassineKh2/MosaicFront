@@ -1,6 +1,7 @@
 import { Node } from "@/Models/Node";
-import { Step, InsertStep, DeleteStep } from "@/Models/Step";
+import { DeleteStep, InsertStep, Step } from "@/Models/Step";
 import { Mapping } from "@/Models/Mapping";
+import { resolvePos } from "@/Models/Resolved";
 
 export class Transaction {
   steps: Step[] = [];
@@ -27,9 +28,27 @@ export class Transaction {
     return this;
   }
 
-  // Apply Steps
-  apply(doc: Node): Node {
-    return this.steps.reduce((d, step) => step.apply(d), doc);
+  // Apply Steps and search for the affected node
+  apply(doc: Node, pos: number): Node {
+    let { node, path } = resolvePos(doc, pos);
+    let newDoc = this.steps.reduce((node, step) => step.apply(node), node);
+
+    const parent = path[path.length - 1].node;
+    const index = path[path.length - 1].childIndex;
+    const beforeAndAfter = parent.Content.content;
+
+    const newChildren = [
+      ...beforeAndAfter.slice(0, index),
+      newDoc,
+      ...beforeAndAfter.slice(index + 1),
+    ];
+
+    return Node.createElement(
+      parent.Type,
+      parent.attrs,
+      newChildren,
+      parent.Marks,
+    );
   }
 
   invert(doc: Node): Transaction {
